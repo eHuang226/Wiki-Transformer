@@ -1,0 +1,428 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sky-top: #ffecd2;
+  --sky-mid: #fcb69f;
+  --sky-bottom: #ff9a9e;
+  --grass-light: #7cb87c;
+  --grass-dark: #5a9e5a;
+  --rose: #8b3a62;
+  --rose-soft: #d4849a;
+  --cream: #fff8f0;
+  --card-bg: rgba(255, 248, 240, 0.72);
+  --card-border: rgba(212, 132, 154, 0.45);
+  --shadow-soft: 0 8px 32px rgba(139, 58, 98, 0.12);
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  color: var(--rose);
+  background: var(--sky-top);
+}
+
+.garden {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    var(--sky-top) 0%,
+    var(--sky-mid) 45%,
+    var(--sky-bottom) 78%,
+    #f8b4b8 100%
+  );
+}
+
+.sky-glow {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: min(90vw, 520px);
+  height: min(50vw, 280px);
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 220, 180, 0.55) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.petal-layer,
+.sky-creatures {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sky-creatures {
+  z-index: 2;
+}
+
+.petal-layer {
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(2rem, 8vw, 4rem) clamp(1.25rem, 5vw, 2rem) 13rem;
+  text-align: center;
+}
+
+.content-header {
+  margin-bottom: 1.5rem;
+}
+
+.headline {
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  font-weight: 600;
+  color: var(--rose);
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-shadow: 0 1px 24px rgba(255, 255, 255, 0.5);
+}
+
+.greeting {
+  margin-top: 0.5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-style: italic;
+  color: var(--rose-soft);
+}
+
+.message-card {
+  width: min(100%, 36rem);
+  max-height: min(50vh, 22rem);
+  overflow-y: auto;
+  padding: clamp(1.25rem, 4vw, 2rem) clamp(1.5rem, 5vw, 2.25rem);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+
+.message-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-card::-webkit-scrollbar-thumb {
+  background: var(--rose-soft);
+  border-radius: 3px;
+}
+
+.message {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+  line-height: 1.65;
+  color: #6b3050;
+  white-space: pre-line;
+}
+
+.bouquet {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.75rem;
+  max-width: 40rem;
+  padding: 0;
+}
+
+.bouquet:empty {
+  display: none;
+}
+
+.bouquet-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(212, 132, 154, 0.35);
+  border-radius: 2rem;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  color: #7a4060;
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+.bouquet-item__bloom {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.signature-block {
+  margin-top: 2rem;
+  opacity: 0;
+}
+
+.signature {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  font-style: italic;
+  color: var(--rose-soft);
+}
+
+.your-name {
+  margin-top: 0.35rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 600;
+  color: var(--rose);
+}
+
+.meadow {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: clamp(10rem, 30vh, 15rem);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.grass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(90, 158, 90, 0.5) 12%,
+    var(--grass-light) 45%,
+    var(--grass-dark) 100%
+  );
+}
+
+.grass::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    rgba(61, 107, 61, 0.15) 8px,
+    rgba(61, 107, 61, 0.15) 9px
+  );
+  opacity: 0.6;
+}
+
+.flowers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.15rem;
+  padding: 0 clamp(0.15rem, 1.5vw, 0.75rem) 0;
+}
+
+.flower {
+  position: relative;
+  flex-shrink: 0;
+  transform: scale(0);
+  transform-origin: bottom center;
+}
+
+.flower-svg {
+  display: block;
+  width: clamp(3rem, 10vw, 4.75rem);
+  height: auto;
+  overflow: visible;
+}
+
+.flower--tall .flower-svg {
+  width: clamp(3.25rem, 11vw, 5.25rem);
+}
+
+.flower--peony .flower-svg {
+  width: clamp(3.25rem, 11vw, 5rem);
+}
+
+.flower--1 { margin-bottom: 0.25rem; }
+.flower--2 { margin-bottom: 0.5rem; transform-origin: bottom center; }
+.flower--3 { margin-bottom: 0; }
+.flower--4 { margin-bottom: 0.75rem; }
+.flower--5 { margin-bottom: 0.35rem; }
+.flower--6 { margin-bottom: 0.6rem; }
+.flower--7 { margin-bottom: 0.4rem; }
+.flower--8 { margin-bottom: 0.15rem; }
+
+/* Slight natural tilt per flower */
+.flower--1 .flower-svg { transform: rotate(-3deg); }
+.flower--2 .flower-svg { transform: rotate(4deg); }
+.flower--3 .flower-svg { transform: rotate(-2deg); }
+.flower--4 .flower-svg { transform: rotate(5deg); }
+.flower--5 .flower-svg { transform: rotate(-4deg); }
+.flower--6 .flower-svg { transform: rotate(2deg); }
+.flower--7 .flower-svg { transform: rotate(3deg); }
+.flower--8 .flower-svg { transform: rotate(-3deg); }
+
+.audio-toggle {
+  position: fixed;
+  bottom: clamp(6.5rem, 16vh, 8.5rem);
+  right: clamp(1rem, 4vw, 1.5rem);
+  z-index: 100;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(212, 132, 154, 0.5);
+  border-radius: 50%;
+  background: rgba(255, 248, 240, 0.85);
+  color: var(--rose);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.audio-toggle:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.audio-toggle.hidden {
+  display: none;
+}
+
+.audio-toggle.is-playing .audio-icon--off {
+  display: none;
+}
+
+.audio-toggle:not(.is-playing) .audio-icon--on {
+  display: none;
+}
+
+.audio-toggle.is-playing {
+  color: var(--grass-dark);
+  border-color: rgba(90, 158, 90, 0.5);
+}
+
+.petal {
+  position: absolute;
+  top: -2rem;
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.75;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-card,
+  .signature-block,
+  .bouquet-item,
+  .flower {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .petal-layer {
+    display: none;
+  }
+
+  .audio-toggle {
+    display: none !important;
+  }
+
+  .scatter-flower {
+    opacity: 0.7 !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .bouquet {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .message-card {
+    max-height: none;
+  }
+
+  .flower-svg {
+    width: clamp(3rem, 14vw, 4.5rem);
+  }
+
+  .flower--tall .flower-svg {
+    width: clamp(3.5rem, 15vw, 5rem);
+  }
+}
+
+@media print {
+  .sky,
+  .meadow,
+  .petal-layer,
+  .sky-creatures,
+  .audio-toggle {
+    display: none !important;
+  }
+
+  body,
+  .garden {
+    background: white;
+  }
+
+  .content {
+    padding: 2rem;
+    color: #333;
+  }
+
+  .message-card {
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    max-height: none;
+  }
+
+  .signature-block,
+  .bouquet-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
