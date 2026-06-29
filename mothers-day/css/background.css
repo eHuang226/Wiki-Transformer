@@ -1,0 +1,261 @@
+/* ---- Distant scenery (hills, clouds, sun) ---- */
+.bg-scenery {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.bg-sun {
+  position: absolute;
+  top: 6%;
+  right: 12%;
+  width: clamp(3rem, 10vw, 5rem);
+  height: clamp(3rem, 10vw, 5rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 240, 200, 0.95) 0%,
+    rgba(255, 200, 140, 0.6) 40%,
+    transparent 70%
+  );
+  box-shadow: 0 0 60px rgba(255, 200, 120, 0.45);
+}
+
+.bg-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50px;
+  filter: blur(1px);
+}
+
+.bg-cloud::before,
+.bg-cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.bg-cloud--1 {
+  top: 10%;
+  left: 8%;
+  width: 90px;
+  height: 28px;
+}
+
+.bg-cloud--1::before {
+  width: 40px;
+  height: 40px;
+  top: -18px;
+  left: 15px;
+}
+
+.bg-cloud--1::after {
+  width: 50px;
+  height: 35px;
+  top: -12px;
+  right: 10px;
+}
+
+.bg-cloud--2 {
+  top: 16%;
+  left: 42%;
+  width: 110px;
+  height: 32px;
+  opacity: 0.7;
+}
+
+.bg-cloud--2::before {
+  width: 45px;
+  height: 45px;
+  top: -22px;
+  left: 20px;
+}
+
+.bg-cloud--2::after {
+  width: 55px;
+  height: 38px;
+  top: -15px;
+  right: 15px;
+}
+
+.bg-cloud--3 {
+  top: 8%;
+  right: 28%;
+  width: 75px;
+  height: 24px;
+  opacity: 0.6;
+}
+
+.bg-cloud--3::before {
+  width: 35px;
+  height: 35px;
+  top: -16px;
+  left: 10px;
+}
+
+.bg-cloud--3::after {
+  width: 42px;
+  height: 30px;
+  top: -10px;
+  right: 8px;
+}
+
+.bg-cloud--4 {
+  top: 22%;
+  right: 5%;
+  width: 65px;
+  height: 22px;
+  opacity: 0.5;
+}
+
+.bg-cloud--4::before {
+  width: 30px;
+  height: 30px;
+  top: -14px;
+  left: 8px;
+}
+
+.bg-cloud--4::after {
+  width: 36px;
+  height: 26px;
+  top: -8px;
+  right: 6px;
+}
+
+.bg-landscape {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1440 / 360;
+  max-height: min(42vh, 22rem);
+  flex-shrink: 0;
+  z-index: 0;
+}
+
+/* ---- Mid-ground wildflower field (depth) ---- */
+.bg-mid-flowers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: clamp(8rem, 24vh, 12rem);
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent 0%, black 35%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 35%);
+}
+
+.bg-mid-flowers .scatter-flower {
+  position: absolute;
+  bottom: 0;
+  transform-origin: bottom center;
+  filter: blur(0.3px);
+}
+
+.bg-mid-flowers .scatter-flower svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- Meadow back layer ---- */
+.meadow-back,
+.meadow-tufts {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.meadow-back {
+  height: 85%;
+  z-index: 2;
+}
+
+.meadow-tufts {
+  height: 50%;
+  z-index: 3;
+}
+
+.meadow-back .scatter-flower {
+  position: absolute;
+  bottom: 0;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 1px 2px rgba(40, 60, 40, 0.2));
+}
+
+.meadow-back .scatter-flower svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.meadow-tufts .grass-tuft {
+  position: absolute;
+  bottom: 0;
+  transform-origin: bottom center;
+}
+
+.meadow-tufts .grass-tuft svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- Side bushes ---- */
+.meadow-bush {
+  position: absolute;
+  bottom: 0;
+  z-index: 4;
+  width: clamp(5rem, 16vw, 9rem);
+  height: auto;
+  filter: drop-shadow(0 2px 6px rgba(40, 60, 40, 0.25));
+}
+
+.meadow-bush--left {
+  left: -1%;
+  bottom: 5%;
+}
+
+.meadow-bush--right {
+  right: -1%;
+  bottom: 8%;
+  transform: scaleX(-1);
+}
+
+.flowers {
+  z-index: 6;
+}
+
+@media (max-width: 600px) {
+  .meadow-bush {
+    width: clamp(4rem, 20vw, 6rem);
+    opacity: 0.85;
+  }
+
+  .bg-mid-flowers {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-cloud {
+    animation: none !important;
+  }
+}
+
+@media print {
+  .bg-scenery,
+  .bg-mid-flowers,
+  .meadow-back,
+  .meadow-tufts,
+  .meadow-bush {
+    display: none !important;
+  }
+}

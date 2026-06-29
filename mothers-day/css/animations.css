@@ -1,0 +1,166 @@
+.sky {
+  animation: skyPulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes skyPulse {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.04); }
+}
+
+.flower {
+  animation: bloom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.flower--1 { animation-delay: 0.2s; }
+.flower--2 { animation-delay: 0.45s; }
+.flower--3 { animation-delay: 0.7s; }
+.flower--4 { animation-delay: 0.35s; }
+.flower--5 { animation-delay: 0.55s; }
+.flower--6 { animation-delay: 0.8s; }
+.flower--7 { animation-delay: 0.5s; }
+.flower--8 { animation-delay: 0.65s; }
+
+@keyframes bloom {
+  0% {
+    transform: scale(0) translateY(1.5rem);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.message-card.is-visible {
+  animation: cardReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 2s;
+}
+
+.signature-block.is-visible {
+  animation: fadeUp 1s ease forwards;
+  animation-delay: 2.8s;
+}
+
+.bouquet-item.is-visible {
+  animation: bloomReason 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.bouquet-item:nth-child(1).is-visible { animation-delay: 3.1s; }
+.bouquet-item:nth-child(2).is-visible { animation-delay: 3.4s; }
+.bouquet-item:nth-child(3).is-visible { animation-delay: 3.7s; }
+.bouquet-item:nth-child(4).is-visible { animation-delay: 4s; }
+.bouquet-item:nth-child(5).is-visible { animation-delay: 4.3s; }
+
+@keyframes cardReveal {
+  0% { opacity: 0; transform: translateY(1.5rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(0.75rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bloomReason {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.headline {
+  animation: headlineIn 1.4s ease forwards;
+}
+
+.greeting {
+  animation: headlineIn 1.4s ease forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+@keyframes headlineIn {
+  0% { opacity: 0; transform: translateY(-0.5rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Cloud drift */
+.bg-cloud--1 { animation: cloudDrift1 55s ease-in-out infinite alternate; }
+.bg-cloud--2 { animation: cloudDrift2 70s ease-in-out infinite alternate; }
+.bg-cloud--3 { animation: cloudDrift3 45s ease-in-out infinite alternate; }
+.bg-cloud--4 { animation: cloudDrift1 60s ease-in-out infinite alternate-reverse; }
+
+@keyframes cloudDrift1 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(40px); }
+}
+
+@keyframes cloudDrift2 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50px); }
+}
+
+@keyframes cloudDrift3 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(30px); }
+}
+
+@keyframes fadeInFlower {
+  0% { opacity: 0; }
+  100% { opacity: var(--target-opacity, 0.7); }
+}
+
+.scatter-flower {
+  opacity: 0;
+  animation: fadeInFlower 1.2s ease forwards;
+}
+
+@keyframes petalFall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: var(--petal-opacity, 0.75); }
+  90% { opacity: var(--petal-opacity, 0.75); }
+  100% {
+    transform: translate(var(--drift-x, 40px), 105vh) rotate(var(--drift-rot, 360deg));
+    opacity: 0;
+  }
+}
+
+.petal {
+  animation-name: petalFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+}
+
+.sparkle-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff8f0, #ffb3c6);
+  pointer-events: none;
+  z-index: 50;
+  animation: sparkle 0.8s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky,
+  .headline,
+  .greeting,
+  .flower {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .message-card.is-visible,
+  .signature-block.is-visible,
+  .bouquet-item.is-visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
