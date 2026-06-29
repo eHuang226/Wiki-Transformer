@@ -229,7 +229,7 @@
   transform: scaleX(-1);
 }
 
-.flowers {
+.blooming-garden {
   z-index: 6;
 }
 
@@ -255,7 +255,8 @@
   .bg-mid-flowers,
   .meadow-back,
   .meadow-tufts,
-  .meadow-bush {
+  .meadow-bush,
+  .blooming-garden {
     display: none !important;
   }
 }
