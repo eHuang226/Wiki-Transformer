@@ -1,150 +1,125 @@
-const STEM = "#5a9e5a";
-const LEAF = "#6aad6a";
+// Blossoming flowers — HTML from Md Usman Ansari (CodePen BamepLe)
+// https://codepen.io/mdusmanansari/pen/BamepLe
 
+const STEM = "#5a9e5a";
+
+function flowerLights() {
+  return Array.from({ length: 8 }, (_, i) =>
+    `<div class="flower__light flower__light--${i + 1}"></div>`
+  ).join("");
+}
+
+function lineLeaves(count) {
+  return Array.from({ length: count }, (_, i) =>
+    `<div class="flower__line__leaf flower__line__leaf--${i + 1}"></div>`
+  ).join("");
+}
+
+function blossomFlower(num, lineLeafCount, field = false) {
+  const lights = field ? "" : flowerLights();
+  const leaves = field ? lineLeaves(Math.min(lineLeafCount, 4)) : lineLeaves(lineLeafCount);
+  return `
+    <div class="flower flower--${num}">
+      <div class="flower__leafs flower__leafs--${num}">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__white-circle"></div>
+        ${lights}
+      </div>
+      <div class="flower__line">
+        ${leaves}
+      </div>
+    </div>`;
+}
+
+/** Seeded layout so the field looks natural but stays consistent on reload. */
+const FIELD_LAYOUT = (() => {
+  let seed = 20260529;
+  const rand = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+
+  const count = 44;
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    const scale = 0.10 + rand() * 0.09;
+    items.push({
+      x: 1 + rand() * 98,
+      y: rand() * 10,
+      scale,
+      rot: -16 + rand() * 32,
+      variant: (i % 3) + 1,
+      z: Math.round(scale * 40) + (i % 3),
+      swayDelay: rand() * 4,
+      bloomDelay: rand() * 1.2,
+    });
+  }
+  return items.sort((a, b) => a.z - b.z);
+})();
+
+function bloomInstance(layout, index) {
+  const lineLeaves = layout.variant === 1 ? 4 : 3;
+  return `
+    <div class="bloom-instance" style="
+      --x: ${layout.x.toFixed(1)}%;
+      --y: ${layout.y.toFixed(1)}%;
+      --scale: ${layout.scale.toFixed(3)};
+      --rot: ${layout.rot.toFixed(1)}deg;
+      --z: ${layout.z};
+      --sway-delay: ${layout.swayDelay.toFixed(2)}s;
+      --bloom-delay: ${layout.bloomDelay.toFixed(2)}s;
+    ">
+      ${blossomFlower(layout.variant, lineLeaves, true)}
+    </div>`;
+}
+
+function buildFlowerField() {
+  return `
+    <div class="blooming-garden__field">
+      ${FIELD_LAYOUT.map((layout, i) => bloomInstance(layout, i)).join("")}
+    </div>`;
+}
+
+const BLOSSOMING_GARDEN_HTML = buildFlowerField();
+
+export function initMainFlowers() {
+  const container = document.getElementById("blooming-garden");
+  if (!container) return;
+
+  container.innerHTML = BLOSSOMING_GARDEN_HTML;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion) {
+    container.classList.remove("not-loaded");
+    return;
+  }
+
+  setTimeout(() => {
+    container.classList.remove("not-loaded");
+  }, 400);
+}
+
+// Small scatter blooms for background layers
 function petalPath(len = 13, width = 5) {
   return `<path d="M0 ${-len} Q${width} ${-len * 0.4} 0 2 Q${-width} ${-len * 0.4} 0 ${-len}"
     fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/>`;
 }
 
-function fivePetalBloom(color, stroke, petalLen = 13) {
-  const angles = [0, 72, 144, 216, 288];
-  return `<g stroke="${stroke}">${angles
-    .map((a) => `<g transform="rotate(${a})" style="color:${color}">${petalPath(petalLen)}</g>`)
-    .join("")}</g><circle r="5.5" fill="#f4d03f" stroke="${stroke}" stroke-width="0.8"/>`;
-}
-
-function stemAndLeaf(x, yTop, height, leaf = "left") {
-  const yBot = yTop + height;
-  let leafSvg = "";
-  if (leaf === "left") {
-    leafSvg = `<path d="M${x - 2} ${yTop + height * 0.45} Q${x - 14} ${yTop + height * 0.35} ${x - 12} ${yTop + height * 0.55} Q${x - 4} ${yTop + height * 0.5} ${x - 2} ${yTop + height * 0.45}" fill="${LEAF}"/>`;
-  } else if (leaf === "right") {
-    leafSvg = `<path d="M${x + 2} ${yTop + height * 0.5} Q${x + 14} ${yTop + height * 0.42} ${x + 11} ${yTop + height * 0.62} Q${x + 3} ${yTop + height * 0.58} ${x + 2} ${yTop + height * 0.5}" fill="${LEAF}"/>`;
-  }
-  return `
-    <path d="M${x} ${yTop} Q${x + 1} ${yTop + height * 0.5} ${x - 1} ${yBot}" stroke="${STEM}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    ${leafSvg}`;
-}
-
-function cupBloom(color, stroke) {
-  return `
-    <circle cx="0" cy="-4" r="9" fill="${color}" stroke="${stroke}" stroke-width="1"/>
-    <circle cx="-6" cy="-8" r="7" fill="${color}" stroke="${stroke}" stroke-width="0.8" opacity="0.9"/>
-    <circle cx="6" cy="-8" r="7" fill="${color}" stroke="${stroke}" stroke-width="0.8" opacity="0.9"/>
-    <circle cx="0" cy="-12" r="5" fill="${color}" stroke="${stroke}" stroke-width="0.8" opacity="0.85"/>
-    <circle cx="0" cy="-6" r="3" fill="#f0c860" stroke="#c9a030" stroke-width="0.6"/>
-  `;
-}
-
-function thinPetalBloom(color, stroke) {
-  const angles = [0, 72, 144, 216, 288];
-  return angles.map((a) => `
-    <line x1="0" y1="0" x2="0" y2="-16" stroke="${color}" stroke-width="2.8" stroke-linecap="round" transform="rotate(${a})"/>
-  `).join("") + `<circle r="4" fill="#6b4030" stroke="${stroke}" stroke-width="0.6"/>`;
-}
-
-function peonyPetal(rot, color, stroke, spread, height) {
-  return `<g transform="rotate(${rot})">
-    <path d="M0 2 Q${spread} ${-height * 0.45} 0 ${-height} Q${-spread} ${-height * 0.45} 0 2"
-      fill="${color}" stroke="${stroke}" stroke-width="0.75" stroke-linejoin="round"/>
-  </g>`;
-}
-
-function peonyBloom(outer, inner, light, stroke) {
-  const outerRing = [0, 51, 102, 153, 204, 255, 306]
-    .map((a) => peonyPetal(a, outer, stroke, 7, 13));
-  const innerRing = [25, 77, 128, 180, 231, 283, 334]
-    .map((a) => peonyPetal(a, inner, stroke, 5, 9));
-  const centerRing = [0, 60, 120, 180, 240, 300]
-    .map((a) => peonyPetal(a, light, stroke, 3.5, 6));
-  return `${outerRing.join("")}${innerRing.join("")}${centerRing.join("")}
-    <circle r="3.5" fill="#f4d03f" stroke="${stroke}" stroke-width="0.6"/>`;
-}
-
-const MAIN_FLOWERS = [
-  {
-    className: "flower flower--1",
-    viewBox: "0 0 80 120",
-    svg: () => `
-      ${stemAndLeaf(40, 52, 62, "left")}
-      <g transform="translate(40 44)">${fivePetalBloom("#ffb3c6", "#d4788f")}</g>
-    `,
-  },
-  {
-    className: "flower flower--2",
-    viewBox: "0 0 80 115",
-    svg: () => `
-      ${stemAndLeaf(42, 48, 58, "right")}
-      <g transform="translate(42 40)">${cupBloom("#ff9a7b", "#c96a50")}</g>
-    `,
-  },
-  {
-    className: "flower flower--3 flower--tall",
-    viewBox: "0 0 80 130",
-    svg: () => `
-      ${stemAndLeaf(38, 58, 68, "left")}
-      <g transform="translate(38 50)">${fivePetalBloom("#ffc8dd", "#d492a8", 15)}</g>
-    `,
-  },
-  {
-    className: "flower flower--4",
-    viewBox: "0 0 80 110",
-    svg: () => `
-      ${stemAndLeaf(40, 46, 56)}
-      <g transform="translate(40 38)">${fivePetalBloom("#ff8fab", "#d45f7a", 12)}</g>
-    `,
-  },
-  {
-    className: "flower flower--5",
-    viewBox: "0 0 80 108",
-    svg: () => `
-      ${stemAndLeaf(39, 45, 55, "right")}
-      <g transform="translate(39 37)">${cupBloom("#f4a6c4", "#b87a94")}</g>
-    `,
-  },
-  {
-    className: "flower flower--6",
-    viewBox: "0 0 80 118",
-    svg: () => `
-      ${stemAndLeaf(41, 50, 60, "left")}
-      <g transform="translate(41 42)">${thinPetalBloom("#c9b1ff", "#8a72b8")}</g>
-    `,
-  },
-  {
-    className: "flower flower--7 flower--peony",
-    viewBox: "0 0 80 125",
-    svg: () => `
-      ${stemAndLeaf(40, 54, 64, "right")}
-      <g transform="translate(40 42)">${peonyBloom("#ff8fab", "#ffb3c6", "#ffd6e8", "#c95f7a")}</g>
-    `,
-  },
-  {
-    className: "flower flower--8 flower--peony flower--tall",
-    viewBox: "0 0 80 135",
-    svg: () => `
-      ${stemAndLeaf(38, 60, 70, "left")}
-      <g transform="translate(38 48)">${peonyBloom("#f4a6c4", "#ffc8dd", "#fff0f5", "#b87a94")}</g>
-    `,
-  },
-];
-
-export function initMainFlowers() {
-  const container = document.querySelector(".flowers");
-  if (!container) return;
-
-  container.innerHTML = MAIN_FLOWERS.map((f) => `
-    <div class="${f.className}">
-      <svg class="flower-svg" viewBox="${f.viewBox}" xmlns="http://www.w3.org/2000/svg">${f.svg()}</svg>
-    </div>
-  `).join("");
-}
-
 export function simplePeony(outer = "#ffb3c6", inner = "#ffc8dd", stroke = "#d492a8") {
+  function peonyPetal(rot, color, spread, height) {
+    return `<g transform="rotate(${rot})">
+      <path d="M0 2 Q${spread} ${-height * 0.45} 0 ${-height} Q${-spread} ${-height * 0.45} 0 2"
+        fill="${color}" stroke="${stroke}" stroke-width="0.75" stroke-linejoin="round"/>
+    </g>`;
+  }
   const petals = [0, 60, 120, 180, 240, 300]
-    .map((a) => peonyPetal(a, outer, stroke, 5, 9))
+    .map((a) => peonyPetal(a, outer, 5, 9))
     .join("");
   const innerPetals = [30, 90, 150, 210, 270, 330]
-    .map((a) => peonyPetal(a, inner, stroke, 3.5, 6))
+    .map((a) => peonyPetal(a, inner, 3.5, 6))
     .join("");
   return `<svg viewBox="0 0 36 50" xmlns="http://www.w3.org/2000/svg">
     <line x1="18" y1="24" x2="18" y2="46" stroke="${STEM}" stroke-width="1.5" stroke-linecap="round"/>
